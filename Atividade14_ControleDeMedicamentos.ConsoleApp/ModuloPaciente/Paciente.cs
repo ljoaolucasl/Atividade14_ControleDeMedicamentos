@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloPaciente
 {
-    public class Paciente : EntidadeMae
+    public class Paciente : EntidadeBase
     {
         public string nome;
         public ulong cpf;

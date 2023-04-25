@@ -10,21 +10,19 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
 {
-    public class RepositorioMae
+    public abstract class RepositorioBase
     {
-        TelaMae telaMae = new();
-
         private ArrayList listaRegistros = new ArrayList();
 
         private int id = 1;
 
-        public void Adicionar(EntidadeMae registro)
+        public void Adicionar(EntidadeBase registro)
         {
             registro.id = id; id++;
             listaRegistros.Add(registro);
         }
 
-        public void Editar(EntidadeMae registroAntigo, EntidadeMae registroNovo)
+        public void Editar(EntidadeBase registroAntigo, EntidadeBase registroNovo)
         {
             if (registroAntigo != null)
             {
@@ -38,7 +36,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             }
         }
 
-        public void Excluir(EntidadeMae registroSelecionado)
+        public void Excluir(EntidadeBase registroSelecionado)
         {
             if (registroSelecionado != null)
             {
@@ -53,21 +51,12 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             return listaRegistros;
         }
 
-        public EntidadeMae SelecionarId(string mensagem)
+        public EntidadeBase SelecionarId(int idEscolhido)
         {
-            if (telaMae.ValidaListaVazia(listaRegistros))
-            {
-                while (true)
-                {
-                    int idEscolhido = (int)telaMae.ValidaNumero(mensagem);
+            foreach (EntidadeBase registro in listaRegistros)
+                if (registro.id == idEscolhido)
+                    return registro;
 
-                    foreach (EntidadeMae registro in listaRegistros)
-                        if (registro.id == idEscolhido)
-                            return registro;
-
-                    telaMae.AvisoIdInexistente();
-                }
-            }
             return null;
         }
     }

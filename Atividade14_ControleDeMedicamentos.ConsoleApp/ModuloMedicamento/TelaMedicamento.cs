@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
 {
-    public class TelaMedicamento : TelaMae
+    public class TelaMedicamento : TelaBase
     {
         public RepositorioFornecedor repositorioFornecedor;
 
@@ -62,6 +62,59 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
             PulaLinha();
         }
 
+        public override void AdicionarRegistro(RepositorioBase tipoRepositorio)
+        {
+            VisualizarRegistro();
+
+            RepositorioBase repositorio = tipoRepositorio;
+
+            EntidadeBase registro = ObterCadastro();
+
+            if (VerificaSeMedicamentoIncrementado(registro))
+            {
+                VisualizarRegistro();
+                MensagemColor($"\nQuantidade do Medicamento Atualizada com sucesso!", ConsoleColor.Green);
+                Console.ReadLine();
+                return;
+            }
+
+            repositorio.Adicionar(registro);
+
+            VisualizarRegistro();
+
+            MensagemColor($"\nCadastro adicionado com sucesso!", ConsoleColor.Green);
+
+            Console.ReadLine();
+        }
+
+        public override void EditarRegistro(RepositorioBase tipoRepositorio)
+        {
+            VisualizarRegistro();
+
+            if (ValidaListaVazia(tipoRepositorio.ObterListaRegistros()))
+            {
+                EntidadeBase registroAntigo = ObterId(tipoRepositorio, "Digite o ID do Item que deseja editar: ");
+
+                EntidadeBase registroAtualizado = ObterCadastro();
+
+                if (tipoRepositorio is RepositorioMedicamento && VerificaSeMedicamentoIncrementado(registroAtualizado))
+                {
+                    VisualizarRegistro();
+                    MensagemColor($"\nQuantidade do Medicamento Atualizada com sucesso!", ConsoleColor.Green);
+                    Console.ReadLine();
+                    return;
+                }
+
+                tipoRepositorio.Editar(registroAntigo, registroAtualizado);
+
+                VisualizarRegistro();
+
+                MensagemColor("\nItem editado com sucesso!", ConsoleColor.Green);
+            }
+
+            Console.ReadLine();
+        }
+
         public ConsoleColor VerificarDisponibilidadePorCor(Medicamento medicamento)
         {
             ConsoleColor cor;
@@ -78,7 +131,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
             return cor;
         }
 
-        public override EntidadeMae ObterCadastro()
+        public override EntidadeBase ObterCadastro()
         {
             Medicamento medicamento = new()
             {
@@ -114,7 +167,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
 
             if (ValidaListaVazia(repositorioFornecedor.ObterListaRegistros()))
             {
-                fornecedor = (Fornecedor)repositorioFornecedor.SelecionarId("Digite o ID do Fornecedor: ");
+                fornecedor = (Fornecedor)ObterId(repositorioFornecedor, "Digite o ID do Fornecedor: ");
             }
             return fornecedor;
         }
@@ -136,6 +189,15 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
                 }
             }
             return novoMedicamento;
+        }
+
+        private bool VerificaSeMedicamentoIncrementado(EntidadeBase medicamento)
+        {
+            if (medicamento == null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

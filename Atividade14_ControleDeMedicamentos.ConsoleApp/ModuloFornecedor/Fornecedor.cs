@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor
 {
-    public class Fornecedor : EntidadeMae
+    public class Fornecedor : EntidadeBase
     {
         public string nome;
         public ulong cnpj;

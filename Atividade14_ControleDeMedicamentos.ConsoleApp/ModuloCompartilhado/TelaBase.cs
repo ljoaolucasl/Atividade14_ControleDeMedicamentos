@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
 {
-    public class TelaMae
+    public abstract class TelaBase
     {
-        public void MostrarMenu(string tipo, ConsoleColor cor, RepositorioMae tipoRepositorio)
+        public virtual void MostrarMenu(string tipo, ConsoleColor cor, RepositorioBase tipoRepositorio)
         {
             bool continuar = true;
 
@@ -26,15 +26,9 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
                 Console.ResetColor();
                 PulaLinha();
                 Console.WriteLine($"(1)Visualizar {tipo}");
-
-                if (tipoRepositorio is RepositorioReposicao)
-                    Console.WriteLine($"(2)Repor {tipo}s");
-                else
-                {
-                    Console.WriteLine($"(2)Adicionar {tipo}");
-                    Console.WriteLine($"(3)Editar {tipo}");
-                    Console.WriteLine($"(4)Excluir {tipo}");
-                }
+                Console.WriteLine($"(2)Adicionar {tipo}");
+                Console.WriteLine($"(3)Editar {tipo}");
+                Console.WriteLine($"(4)Excluir {tipo}");
                 PulaLinha();
                 Console.WriteLine("(S)Sair");
                 PulaLinha();
@@ -44,7 +38,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             }
         }
 
-        public virtual bool InicializarOpcaoEscolhida(RepositorioMae tipoRepositorio)
+        public virtual bool InicializarOpcaoEscolhida(RepositorioBase tipoRepositorio)
         {
             string entrada = Console.ReadLine();
 
@@ -60,9 +54,9 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             return true;
         }
 
-        public virtual void VisualizarRegistro() { }
+        public abstract void VisualizarRegistro();
 
-        public virtual EntidadeMae ObterCadastro() { return null; }
+        public virtual EntidadeBase ObterCadastro() { return null; }
 
         public ulong ValidaNumero(string mensagem)
         {
@@ -104,6 +98,27 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             MensagemColor("Atenção, apenas ID`s existentes\n", ConsoleColor.Red);
         }
 
+        public EntidadeBase ObterId(RepositorioBase tipoRepositorio, string mensagem)
+        {
+            EntidadeBase registro;
+
+            if (ValidaListaVazia(tipoRepositorio.ObterListaRegistros()))
+            {
+                while (true)
+                {
+                    int idEscolhido = (int)ValidaNumero(mensagem);
+
+                    registro = tipoRepositorio.SelecionarId(idEscolhido);
+
+                    if (registro == null)
+                        AvisoIdInexistente();
+                    else
+                        return registro;
+                }
+            }
+            return null;
+        }
+
         protected void MensagemColor(string mensagem, ConsoleColor cor)
         {
             Console.ForegroundColor = cor;
@@ -129,21 +144,13 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
 
         protected bool zebrado = true;
 
-        private void AdicionarRegistro(RepositorioMae tipoRepositorio)
+        public virtual void AdicionarRegistro(RepositorioBase tipoRepositorio)
         {
             VisualizarRegistro();
 
-            RepositorioMae repositorio = tipoRepositorio;
+            RepositorioBase repositorio = tipoRepositorio;
 
-            EntidadeMae registro = ObterCadastro();
-
-            if (tipoRepositorio is RepositorioMedicamento && VerificaSeMedicamentoIncrementado(registro))
-            {
-                VisualizarRegistro();
-                MensagemColor($"\nQuantidade do Medicamento Atualizada com sucesso!", ConsoleColor.Green);
-                Console.ReadLine();
-                return;
-            }
+            EntidadeBase registro = ObterCadastro();
 
             repositorio.Adicionar(registro);
 
@@ -154,23 +161,15 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             Console.ReadLine();
         }
 
-        private void EditarRegistro(RepositorioMae tipoRepositorio)
+        public virtual void EditarRegistro(RepositorioBase tipoRepositorio)
         {
             VisualizarRegistro();
 
             if (ValidaListaVazia(tipoRepositorio.ObterListaRegistros()))
             {
-                EntidadeMae registroAntigo = tipoRepositorio.SelecionarId("Digite o ID do Item que deseja editar: ");
+                EntidadeBase registroAntigo = ObterId(tipoRepositorio, "Digite o ID do Item que deseja editar: ");
 
-                EntidadeMae registroAtualizado = ObterCadastro();
-
-                if (tipoRepositorio is RepositorioMedicamento && VerificaSeMedicamentoIncrementado(registroAtualizado))
-                {
-                    VisualizarRegistro();
-                    MensagemColor($"\nQuantidade do Medicamento Atualizada com sucesso!", ConsoleColor.Green);
-                    Console.ReadLine();
-                    return;
-                }
+                EntidadeBase registroAtualizado = ObterCadastro();
 
                 tipoRepositorio.Editar(registroAntigo, registroAtualizado);
 
@@ -182,13 +181,13 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             Console.ReadLine();
         }
 
-        private void ExcluirRegistro(RepositorioMae tipoRepositorio)
+        private void ExcluirRegistro(RepositorioBase tipoRepositorio)
         {
             VisualizarRegistro();
 
             if (ValidaListaVazia(tipoRepositorio.ObterListaRegistros()))
             {
-                EntidadeMae registroEscolhido = tipoRepositorio.SelecionarId("Digite o ID do Item que deseja editar: ");
+                EntidadeBase registroEscolhido = ObterId(tipoRepositorio, "Digite o ID do Item que deseja excluir: ");
 
                 tipoRepositorio.Excluir(registroEscolhido);
 
@@ -198,15 +197,6 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             }
 
             Console.ReadLine();
-        }
-
-        private bool VerificaSeMedicamentoIncrementado(EntidadeMae medicamento)
-        {
-            if (medicamento == null)
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

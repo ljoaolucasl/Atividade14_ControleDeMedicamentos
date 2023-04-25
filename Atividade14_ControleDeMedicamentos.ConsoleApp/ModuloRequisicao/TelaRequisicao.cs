@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
 {
-    public class TelaRequisicao : TelaMae
+    public class TelaRequisicao : TelaBase
     {
         public RepositorioPaciente repositorioPaciente;
         public RepositorioMedicamento repositorioMedicamento;
@@ -63,7 +63,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
             PulaLinha();
         }
 
-        public override EntidadeMae ObterCadastro()
+        public override EntidadeBase ObterCadastro()
         {
             Requisicao requisicao = new()
             {
@@ -84,7 +84,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
 
             if (ValidaListaVazia(repositorioPaciente.ObterListaRegistros()))
             {
-                paciente = (Paciente)repositorioPaciente.SelecionarId("Digite o ID do Paciente: ");
+                paciente = (Paciente)ObterId(repositorioPaciente, "Digite o ID do Paciente: ");
             }
             return paciente;
         }
@@ -99,7 +99,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
             {
                 do
                 {
-                    medicamento = (Medicamento)repositorioMedicamento.SelecionarId("Digite o ID do Medicamento: ");
+                    medicamento = (Medicamento)ObterId(repositorioMedicamento, "Digite o ID do Medicamento: ");
 
                     if (medicamento.quantidade <= 0)
                         MensagemColor("Este Medicamento está em Falta...\n", ConsoleColor.DarkRed);
@@ -119,7 +119,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
 
             if (ValidaListaVazia(repositorioFuncionario.ObterListaRegistros()))
             {
-                funcionario = (Funcionario)repositorioFuncionario.SelecionarId("Digite o ID do Funcionário: ");
+                funcionario = (Funcionario)ObterId(repositorioFuncionario, "Digite o ID do Funcionário: ");
             }
             return funcionario;
         }

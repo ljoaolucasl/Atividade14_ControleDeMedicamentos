@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloPaciente
 {
-    public class TelaPaciente : TelaMae
+    public class TelaPaciente : TelaBase
     {
         private RepositorioPaciente repositorioPaciente;
 
@@ -45,7 +45,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloPaciente
             PulaLinha();
         }
 
-        public override EntidadeMae ObterCadastro()
+        public override EntidadeBase ObterCadastro()
         {
             Paciente paciente = new()
             {

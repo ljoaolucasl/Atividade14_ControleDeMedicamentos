@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFuncionario
 {
-    public class RepositorioFuncionario : RepositorioMae
+    public class RepositorioFuncionario : RepositorioBase
     {
         public void PreCadastrarFuncionarios()
         {

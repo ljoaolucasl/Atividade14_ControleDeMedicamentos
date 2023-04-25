@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor
 {
-    public class RepositorioFornecedor : RepositorioMae
+    public class RepositorioFornecedor : RepositorioBase
     {
         public void PreCadastrarFornecedores()
         {

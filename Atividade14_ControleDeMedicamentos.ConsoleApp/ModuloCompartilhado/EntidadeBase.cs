@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
 {
-    public class EntidadeMae
+    public abstract class EntidadeBase
     {
         public int id;
     }

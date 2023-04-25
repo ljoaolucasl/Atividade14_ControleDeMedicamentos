@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
 {
-    public class Reposicao : EntidadeMae
+    public class Reposicao : EntidadeBase
     {
         public Medicamento medicamento;
     }

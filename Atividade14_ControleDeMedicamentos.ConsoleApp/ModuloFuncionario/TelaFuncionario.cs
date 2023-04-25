@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFuncionario
 {
-    public class TelaFuncionario : TelaMae
+    public class TelaFuncionario : TelaBase
     {
         private RepositorioFuncionario repositorioFuncionario;
 
@@ -45,7 +45,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFuncionario
             PulaLinha();
         }
 
-        public override EntidadeMae ObterCadastro()
+        public override EntidadeBase ObterCadastro()
         {
             Funcionario funcionario = new()
             {

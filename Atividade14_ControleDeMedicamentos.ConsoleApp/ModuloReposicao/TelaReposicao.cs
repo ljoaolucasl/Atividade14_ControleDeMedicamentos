@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
 {
-    public class TelaReposicao : TelaMae
+    public class TelaReposicao : TelaBase
     {
         public RepositorioReposicao repositorioReposicao;
 
@@ -20,6 +20,29 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
         {
             this.repositorioReposicao = repositorioReposicao;
             this.telaMedicamento = telaMedicamento;
+        }
+
+        public override void MostrarMenu(string tipo, ConsoleColor cor, RepositorioBase tipoRepositorio)
+        {
+            bool continuar = true;
+
+            while (continuar)
+            {
+                Console.Clear();
+
+                Console.ForegroundColor = cor;
+                Console.WriteLine($"Controle de {tipo}");
+                Console.ResetColor();
+                PulaLinha();
+                Console.WriteLine($"(1)Visualizar {tipo}");
+                Console.WriteLine($"(2)Repor {tipo}s");
+                PulaLinha();
+                Console.WriteLine("(S)Sair");
+                PulaLinha();
+                Console.Write("Escolha: ");
+
+                continuar = InicializarOpcaoEscolhida(tipoRepositorio);
+            }
         }
 
         public override void VisualizarRegistro()
@@ -63,7 +86,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
             PulaLinha();
         }
 
-        public override bool InicializarOpcaoEscolhida(RepositorioMae tipoRepositorio)
+        public override bool InicializarOpcaoEscolhida(RepositorioBase tipoRepositorio)
         {
             string entrada = Console.ReadLine();
 
@@ -83,7 +106,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
 
             if (ValidaListaVazia(repositorioReposicao.ObterListaRegistros()))
             {
-                Reposicao reposicao = (Reposicao)repositorioReposicao.SelecionarId("Digite o ID do Medicamento que deseja repor: ");
+                Reposicao reposicao = (Reposicao)ObterId(repositorioReposicao, "Digite o ID do Medicamento que deseja repor: ");
 
                 int quantidade = (int)ValidaNumero($"Escreva quanto de {reposicao.medicamento.nome} deseja solicitar: ");
 

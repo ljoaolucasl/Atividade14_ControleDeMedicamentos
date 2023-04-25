@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
 {
-    public class RepositorioRequisicao : RepositorioMae { }
+    public class RepositorioRequisicao : RepositorioBase { }
 }

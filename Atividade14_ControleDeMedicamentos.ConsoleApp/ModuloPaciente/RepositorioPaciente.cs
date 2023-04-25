@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloPaciente
 {
-    public class RepositorioPaciente : RepositorioMae
+    public class RepositorioPaciente : RepositorioBase
     {
         public void PreCadastrarPacientes()
         {

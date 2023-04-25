@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor
 {
-    public class TelaFornecedor : TelaMae
+    public class TelaFornecedor : TelaBase
     {
         private RepositorioFornecedor repositorioFornecedor;
 
@@ -45,7 +45,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor
             PulaLinha();
         }
 
-        public override EntidadeMae ObterCadastro()
+        public override EntidadeBase ObterCadastro()
         {
             Fornecedor fornecedor = new()
             {

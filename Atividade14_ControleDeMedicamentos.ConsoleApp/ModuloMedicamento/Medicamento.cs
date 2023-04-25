@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
 {
-    public class Medicamento : EntidadeMae
+    public class Medicamento : EntidadeBase
     {
         public string nome;
         public string descricao;

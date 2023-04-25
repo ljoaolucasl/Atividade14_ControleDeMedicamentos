@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
 {
-    public class Requisicao : EntidadeMae
+    public class Requisicao : EntidadeBase
     {
         public Paciente paciente;
         public Medicamento medicamento;

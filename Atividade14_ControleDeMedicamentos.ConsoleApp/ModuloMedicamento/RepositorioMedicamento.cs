@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
 {
-    public class RepositorioMedicamento : RepositorioMae
+    public class RepositorioMedicamento : RepositorioBase
     {
         private RepositorioFornecedor repositorioFornecedor;
 
