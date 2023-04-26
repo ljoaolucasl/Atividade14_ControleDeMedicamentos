@@ -19,48 +19,18 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
             this.repositorioMedicamento = repositorioMedicamento;
         }
 
-        public void OrganizaMedicamentosEmFalta()
+        public void AdicionarQuantidadeMedicamento(Medicamento medicamento, int quantidade)
         {
-            foreach (Medicamento medicamento in repositorioMedicamento.ObterListaRegistros())
-            {
-                Reposicao reposicao = new();
-                bool remedioExistente = false;
-
-                if (medicamento.quantidade <= 10)
-                {
-                    foreach (Reposicao item in ObterListaRegistros())
-                    {
-                        if (item.medicamento.nome == medicamento.nome)
-                            remedioExistente = true;
-                    }
-                    if (!remedioExistente)
-                    {
-                        reposicao.medicamento = medicamento;
-                        Adicionar(reposicao);
-                    }
-                }
-            }
+            medicamento.quantidade += quantidade;
         }
 
-        public void RemoveMedicamentosRepostos()
+        public ArrayList ListaOrganizadaPorQuantidadeEmFalta()
         {
-            ArrayList novaLista = new();
+            ArrayList listaOrganizada = new(repositorioMedicamento.ObterListaRegistros().ToArray());
 
-            foreach (Reposicao item in ObterListaRegistros())
-            {
-                if (item.medicamento.quantidade <= 10)
-                {
-                    novaLista.Add(item);
-                }
-            }
+            listaOrganizada.Sort(new CompararMedicamentosEmFalta());
 
-            ObterListaRegistros().Clear();
-            ObterListaRegistros().AddRange(novaLista);
-        }
-
-        public void AdicionarQuantidadeMedicamento(Reposicao reposicao, int quantidade)
-        {
-            reposicao.medicamento.quantidade += quantidade;
+            return listaOrganizada;
         }
     }
 }

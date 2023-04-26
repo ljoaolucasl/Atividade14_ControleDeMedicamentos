@@ -1,7 +1,9 @@
 ﻿using Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado;
 using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor;
 using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloPaciente;
+using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +19,60 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
 
         public RepositorioMedicamento repositorioMedicamento;
 
-        public TelaMedicamento(RepositorioMedicamento repositorioMedicamento, RepositorioFornecedor repositorioFornecedor, TelaFornecedor telaFornecedor)
+        public TelaReposicao telaReposicao;
+
+        public TelaMedicamento(RepositorioMedicamento repositorioMedicamento, RepositorioFornecedor repositorioFornecedor, TelaFornecedor telaFornecedor, TelaReposicao telaReposicao)
         {
             this.repositorioMedicamento = repositorioMedicamento;
             this.repositorioFornecedor = repositorioFornecedor;
             this.telaFornecedor = telaFornecedor;
+            this.telaReposicao = telaReposicao;
+        }
+
+        public override void MostrarMenu(string tipo, ConsoleColor cor, RepositorioBase tipoRepositorio)
+        {
+            bool continuar = true;
+
+            while (continuar)
+            {
+                Console.Clear();
+
+                Console.ForegroundColor = cor;
+                Console.WriteLine($"Controle de {tipo}");
+                Console.ResetColor();
+                PulaLinha();
+                Console.WriteLine($"(1)Visualizar {tipo}s");
+                Console.WriteLine($"(2)Adicionar {tipo}");
+                Console.WriteLine($"(3)Editar {tipo}");
+                Console.WriteLine($"(4)Excluir {tipo}");
+                PulaLinha();
+                Console.WriteLine($"(5)Visualizar {tipo}s em falta");
+                Console.WriteLine($"(6)Visualizar {tipo}s mais requisitados");
+                PulaLinha();
+                Console.WriteLine("(S)Sair");
+                PulaLinha();
+                Console.Write("Escolha: ");
+
+                continuar = InicializarOpcaoEscolhida(tipoRepositorio);
+            }
+        }
+
+        public override bool InicializarOpcaoEscolhida(RepositorioBase tipoRepositorio)
+        {
+            string entrada = Console.ReadLine();
+
+            switch (entrada.ToUpper())
+            {
+                case "1": VisualizarRegistro(); Console.ReadLine(); break;
+                case "2": AdicionarRegistro(tipoRepositorio); break;
+                case "3": EditarRegistro(tipoRepositorio); break;
+                case "4": ExcluirRegistro(tipoRepositorio); break;
+                case "5": telaReposicao.VisualizarRegistro(); Console.ReadLine(); break;
+                case "6": VisualizarMedicamentosRequisitados(); Console.ReadLine(); break;
+                case "S": return false;
+                default: break;
+            }
+            return true;
         }
 
         public override void VisualizarRegistro()
@@ -44,6 +95,44 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
             Console.ResetColor();
 
             foreach (Medicamento medicamento in repositorioMedicamento.ObterListaRegistros())
+            {
+                TextoZebrado();
+
+                cor = VerificarDisponibilidadePorCor(medicamento);
+
+                Console.Write(espacamento, "#" + medicamento.id, medicamento.nome, medicamento.descricao, medicamento.fornecedor.nome);
+                Console.ForegroundColor = cor;
+                Console.Write("{0, -15}", medicamento.quantidade == 0 ? "Em Falta" : medicamento.quantidade);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(" │ {0, -15}", medicamento.saida);
+            }
+
+            Console.ResetColor();
+            zebrado = true;
+
+            PulaLinha();
+        }
+
+        private void VisualizarMedicamentosRequisitados()
+        {
+            Console.Clear();
+
+            ConsoleColor cor;
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("╔" + "".PadRight(138, '═') + "╗");
+            Console.WriteLine("║                                                               Medicamentos                                                               ║");
+            Console.WriteLine("╚" + "".PadRight(138, '═') + "╝");
+            PulaLinha();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            string espacamento = "{0, -5} │ {1, -30} │ {2, -30} │ {3, -30} │ ";
+            Console.Write(espacamento, "ID", "Nome", "Descrição", "Fornecedor");
+            Console.Write("{0, -15}", "Quantidade");
+            Console.WriteLine(" │ {0, -15}", "Requisições");
+            Console.WriteLine("".PadRight(140, '―'));
+            Console.ResetColor();
+
+            foreach (Medicamento medicamento in repositorioMedicamento.ListaOrganizadaPorRequisicoes())
             {
                 TextoZebrado();
 
@@ -115,7 +204,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
             Console.ReadLine();
         }
 
-        public ConsoleColor VerificarDisponibilidadePorCor(Medicamento medicamento)
+        private ConsoleColor VerificarDisponibilidadePorCor(Medicamento medicamento)
         {
             ConsoleColor cor;
 

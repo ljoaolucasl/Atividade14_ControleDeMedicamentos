@@ -14,12 +14,12 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
     {
         public RepositorioReposicao repositorioReposicao;
 
-        public TelaMedicamento telaMedicamento;
+        public RepositorioMedicamento repositorioMedicamento;
 
-        public TelaReposicao(RepositorioReposicao repositorioReposicao, TelaMedicamento telaMedicamento)
+        public TelaReposicao(RepositorioReposicao repositorioReposicao, RepositorioMedicamento repositorioMedicamento)
         {
             this.repositorioReposicao = repositorioReposicao;
-            this.telaMedicamento = telaMedicamento;
+            this.repositorioMedicamento = repositorioMedicamento;
         }
 
         public override void MostrarMenu(string tipo, ConsoleColor cor, RepositorioBase tipoRepositorio)
@@ -47,15 +47,13 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
 
         public override void VisualizarRegistro()
         {
-            repositorioReposicao.OrganizaMedicamentosEmFalta();
-
             ConsoleColor cor;
 
             Console.Clear();
 
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine("╔" + "".PadRight(138, '═') + "╗");
-            Console.WriteLine("║                                                           Medicamentos Em Falta                                                          ║");
+            Console.WriteLine("║                                                               Medicamentos                                                               ║");
             Console.WriteLine("╚" + "".PadRight(138, '═') + "╝");
             PulaLinha();
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
@@ -66,22 +64,21 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
             Console.WriteLine("".PadRight(140, '―'));
             Console.ResetColor();
 
-            foreach (Reposicao reposicao in repositorioReposicao.ObterListaRegistros())
+            foreach (Medicamento medicamento in repositorioReposicao.ListaOrganizadaPorQuantidadeEmFalta())
             {
                 TextoZebrado();
 
-                cor = telaMedicamento.VerificarDisponibilidadePorCor(reposicao.medicamento);
+                cor = VerificarDisponibilidadePorCor(medicamento);
 
-                Console.Write(espacamento, "#" + reposicao.id, reposicao.medicamento.nome, reposicao.medicamento.descricao, reposicao.medicamento.fornecedor.nome);
+                Console.Write(espacamento, "#" + medicamento.id, medicamento.nome, medicamento.descricao, medicamento.fornecedor.nome);
                 Console.ForegroundColor = cor;
-                Console.Write("{0, -15}", reposicao.medicamento.quantidade == 0 ? "Em Falta" : reposicao.medicamento.quantidade);
+                Console.Write("{0, -15}", medicamento.quantidade == 0 ? "Em Falta" : medicamento.quantidade);
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(" │ {0, -15}", reposicao.medicamento.saida);
+                Console.WriteLine(" │ {0, -15}", medicamento.saida);
             }
 
             Console.ResetColor();
             zebrado = true;
-            repositorioReposicao.RemoveMedicamentosRepostos();
 
             PulaLinha();
         }
@@ -100,17 +97,33 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
             return true;
         }
 
+        private ConsoleColor VerificarDisponibilidadePorCor(Medicamento medicamento)
+        {
+            ConsoleColor cor;
+
+            if (medicamento.quantidade <= 10)
+                cor = ConsoleColor.DarkRed;
+
+            else if (medicamento.quantidade <= 25)
+                cor = ConsoleColor.DarkYellow;
+
+            else
+                cor = ConsoleColor.White;
+
+            return cor;
+        }
+
         private void AdicionarSolicitacao()
         {
             VisualizarRegistro();
 
-            if (ValidaListaVazia(repositorioReposicao.ObterListaRegistros()))
+            if (ValidaListaVazia(repositorioReposicao.ListaOrganizadaPorQuantidadeEmFalta()))
             {
-                Reposicao reposicao = (Reposicao)ObterId(repositorioReposicao, "Digite o ID do Medicamento que deseja repor: ");
+                Medicamento medicamento = (Medicamento)ObterId(repositorioMedicamento, "Digite o ID do Medicamento que deseja repor: ");
 
-                int quantidade = (int)ValidaNumero($"Escreva quanto de {reposicao.medicamento.nome} deseja solicitar: ");
+                int quantidade = (int)ValidaNumero($"Escreva quanto de {medicamento.nome} deseja solicitar: ");
 
-                repositorioReposicao.AdicionarQuantidadeMedicamento(reposicao, quantidade);
+                repositorioReposicao.AdicionarQuantidadeMedicamento(medicamento, quantidade);
 
                 VisualizarRegistro();
 

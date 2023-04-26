@@ -20,7 +20,11 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp
             TelaFuncionario telaFuncionario = new(repositorioFuncionario);
 
             RepositorioMedicamento repositorioMedicamento = new(repositorioFornecedor);
-            TelaMedicamento telaMedicamento = new(repositorioMedicamento, repositorioFornecedor, telaFornecedor);
+
+            RepositorioReposicao repositorioReposicao = new(repositorioMedicamento);
+            TelaReposicao telaReposicao = new(repositorioReposicao, repositorioMedicamento);
+
+            TelaMedicamento telaMedicamento = new(repositorioMedicamento, repositorioFornecedor, telaFornecedor, telaReposicao);
 
             RepositorioPaciente repositorioPaciente = new();
             TelaPaciente telaPaciente = new(repositorioPaciente);
@@ -29,8 +33,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp
             TelaRequisicao telaRequisicao = new(repositorioRequisicao, repositorioPaciente, repositorioMedicamento,
                 repositorioFuncionario, telaPaciente, telaMedicamento, telaFuncionario);
 
-            RepositorioReposicao repositorioReposicao = new(repositorioMedicamento);
-            TelaReposicao telaReposicao = new(repositorioReposicao, telaMedicamento);
+            
             #endregion
 
             bool continuar = true;
@@ -81,7 +84,6 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp
             Console.WriteLine("Reposições e Requisições");
             PulaLinha();
             Console.WriteLine("(5)Reposição de Medicamentos");
-            PulaLinha();
             Console.WriteLine("(6)Requisição Paciente");
             PulaLinha();
             PulaLinha();

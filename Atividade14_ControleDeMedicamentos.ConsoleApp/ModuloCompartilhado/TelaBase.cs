@@ -48,7 +48,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
                 case "2": AdicionarRegistro(tipoRepositorio); break;
                 case "3": EditarRegistro(tipoRepositorio); break;
                 case "4": ExcluirRegistro(tipoRepositorio); break;
-                case "S": return false; break;
+                case "S": return false;
                 default: break;
             }
             return true;
@@ -181,7 +181,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             Console.ReadLine();
         }
 
-        private void ExcluirRegistro(RepositorioBase tipoRepositorio)
+        public virtual void ExcluirRegistro(RepositorioBase tipoRepositorio)
         {
             VisualizarRegistro();
 

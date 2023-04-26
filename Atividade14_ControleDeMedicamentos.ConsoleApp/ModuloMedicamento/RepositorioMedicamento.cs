@@ -1,5 +1,6 @@
 ﻿using Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado;
 using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor;
+using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,6 +60,15 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento
 
             if (novoMedicamento.descricao != "")
                 medicamento.descricao = novoMedicamento.descricao;
+        }
+
+        public ArrayList ListaOrganizadaPorRequisicoes()
+        {
+            ArrayList listaOrganizada = new(ObterListaRegistros().ToArray());
+
+            listaOrganizada.Sort(new CompararMedicamentosMaisRequisitados());
+
+            return listaOrganizada;
         }
     }
 }
