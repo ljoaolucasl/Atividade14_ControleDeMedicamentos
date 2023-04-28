@@ -10,7 +10,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloPaciente
     public class Paciente : EntidadeBase
     {
         public string nome;
-        public ulong cpf;
-        public ulong telefone;
+        public string cpf;
+        public string telefone;
     }
 }

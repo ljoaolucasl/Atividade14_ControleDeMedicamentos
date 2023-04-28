@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
@@ -38,7 +39,9 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             }
         }
 
-        public virtual bool InicializarOpcaoEscolhida(RepositorioBase tipoRepositorio)
+        public abstract void VisualizarRegistro();
+
+        protected virtual bool InicializarOpcaoEscolhida(RepositorioBase tipoRepositorio)
         {
             string entrada = Console.ReadLine();
 
@@ -54,15 +57,90 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             return true;
         }
 
-        public abstract void VisualizarRegistro();
+        protected virtual void AdicionarRegistro(RepositorioBase tipoRepositorio)
+        {
+            VisualizarRegistro();
 
-        public virtual EntidadeBase ObterCadastro() { return null; }
+            RepositorioBase repositorio = tipoRepositorio;
 
-        public ulong ValidaNumero(string mensagem)
+            EntidadeBase registro = ObterCadastro();
+
+            repositorio.Adicionar(registro);
+
+            VisualizarRegistro();
+
+            MensagemColor($"\nCadastro adicionado com sucesso!", ConsoleColor.Green);
+
+            Console.ReadLine();
+        }
+
+        protected virtual void EditarRegistro(RepositorioBase tipoRepositorio)
+        {
+            VisualizarRegistro();
+
+            if (ValidaListaVazia(tipoRepositorio.ObterListaRegistros()))
+            {
+                EntidadeBase registroAntigo = ObterId(tipoRepositorio, "Digite o ID do Item que deseja editar: ");
+
+                EntidadeBase registroAtualizado = ObterCadastro();
+
+                tipoRepositorio.Editar(registroAntigo, registroAtualizado);
+
+                VisualizarRegistro();
+
+                MensagemColor("\nItem editado com sucesso!", ConsoleColor.Green);
+            }
+
+            Console.ReadLine();
+        }
+
+        protected virtual void ExcluirRegistro(RepositorioBase tipoRepositorio)
+        {
+            VisualizarRegistro();
+
+            if (ValidaListaVazia(tipoRepositorio.ObterListaRegistros()))
+            {
+                EntidadeBase registroEscolhido = ObterId(tipoRepositorio, "Digite o ID do Item que deseja excluir: ");
+
+                tipoRepositorio.Excluir(registroEscolhido);
+
+                VisualizarRegistro();
+
+                MensagemColor("\nItem excluído com sucesso!", ConsoleColor.Green);
+            }
+
+            Console.ReadLine();
+        }
+
+        protected abstract EntidadeBase ObterCadastro();
+
+        protected EntidadeBase ObterId(RepositorioBase tipoRepositorio, string mensagem)
+        {
+            EntidadeBase registro;
+
+            if (ValidaListaVazia(tipoRepositorio.ObterListaRegistros()))
+            {
+                while (true)
+                {
+                    int idEscolhido = ValidaNumero(mensagem);
+
+                    registro = tipoRepositorio.SelecionarId(idEscolhido);
+
+                    if (registro == null)
+                        MensagemColor("Atenção, apenas ID`s existentes\n", ConsoleColor.Red);
+
+                    else
+                        return registro;
+                }
+            }
+            return null;
+        }
+
+        protected int ValidaNumero(string mensagem)
         {
             bool validaNumero;
             string entrada;
-            ulong numero;
+            int numero;
 
             do
             {
@@ -70,7 +148,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
 
                 entrada = Console.ReadLine();
 
-                validaNumero = ulong.TryParse(entrada, out numero);
+                validaNumero = int.TryParse(entrada, out numero);
 
                 if (!validaNumero)
                 {
@@ -82,7 +160,111 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             return numero;
         }
 
-        public bool ValidaListaVazia(ArrayList lista)
+        protected string ValidaTelefone(string mensagem)
+        {
+            bool validaTelefone;
+            string entrada;
+            string telefoneFormato = @"^\((\d{2})\)(\d{5})\-(\d{4})$|^\((\d{2})\)(\d{4})\-(\d{4})$|^(\d{2})(\d{4})(\d{4})$|^(\d{2})(\d{5})(\d{4})$";
+
+            do
+            {
+                Console.Write(mensagem);
+
+                entrada = Console.ReadLine();
+
+                validaTelefone = Regex.IsMatch(entrada, telefoneFormato);
+
+                if (!validaTelefone)
+                    MensagemColor("Atenção, telefone inválido. Ex: (ddd)00000-0000 (Traços e Parênteses não necessários)\n", ConsoleColor.Red);
+
+            } while (!validaTelefone);
+
+            if (Regex.IsMatch(entrada, @"^(\d{2})(\d{4})(\d{4})$"))
+                entrada = Regex.Replace(entrada, @"^(\d{2})(\d{4})(\d{4})$", "($1)$2-$3");
+
+            else if (Regex.IsMatch(entrada, @"^(\d{2})(\d{5})(\d{4})$"))
+                entrada = Regex.Replace(entrada, @"^(\d{2})(\d{5})(\d{4})$", "($1)$2-$3");
+
+            return entrada;
+        }
+
+        protected string ValidaCPF(string mensagem)
+        {
+            bool validaCPF;
+            string entrada;
+            string cpfFormato = @"^(\d{3})\.(\d{3})\.(\d{3})\-(\d{2})$|^(\d{3})(\d{3})(\d{3})(\d{2})$";
+
+            do
+            {
+                Console.Write(mensagem);
+
+                entrada = Console.ReadLine();
+
+                validaCPF = Regex.IsMatch(entrada, cpfFormato);
+
+                if (!validaCPF)
+                    MensagemColor("Atenção, CPF inválido. Ex: 000.000.000-00 (Traços e Pontos não necessários)\n", ConsoleColor.Red);
+
+            } while (!validaCPF);
+
+            if (Regex.IsMatch(entrada, @"(\d{3})(\d{3})(\d{3})(\d{2})"))
+                entrada = Regex.Replace(entrada, @"(\d{3})(\d{3})(\d{3})(\d{2})", "$1.$2.$3-$4");
+
+            return entrada;
+        }
+
+        protected string ValidaCNPJ(string mensagem)
+        {
+            bool validaCPF;
+            string entrada;
+            string cpfFormato = @"^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})\-(\d{2})$|^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$";
+
+            do
+            {
+                Console.Write(mensagem);
+
+                entrada = Console.ReadLine();
+
+                validaCPF = Regex.IsMatch(entrada, cpfFormato);
+
+                if (!validaCPF)
+                {
+                    MensagemColor("Atenção, CNPJ inválido. Ex: 00.000.000/0000-00 (Traços e Pontos não necessários)\n", ConsoleColor.Red);
+                }
+
+            } while (!validaCPF);
+
+            if (Regex.IsMatch(entrada, @"(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})"))
+                entrada = Regex.Replace(entrada, @"(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})", "$1.$2.$3/$4-$5");
+
+            return entrada;
+        }
+
+        protected DateTime ValidaData(string mensagem)
+        {
+            bool validaData;
+            string entrada;
+            DateTime dataAbertura;
+
+            do
+            {
+                Console.Write(mensagem);
+
+                entrada = Console.ReadLine();
+
+                validaData = DateTime.TryParse(entrada, out dataAbertura);
+
+                if (!validaData)
+                {
+                    MensagemColor("Atenção, escreva uma data válida\n", ConsoleColor.Red);
+                }
+
+            } while (!validaData);
+
+            return dataAbertura;
+        }
+
+        protected bool ValidaListaVazia(ArrayList lista)
         {
             if (lista.Count == 0)
             {
@@ -93,30 +275,23 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
                 return true;
         }
 
-        public void AvisoIdInexistente()
+        protected void MostrarCabecalho(int espaco, string texto, ConsoleColor cor)
         {
-            MensagemColor("Atenção, apenas ID`s existentes\n", ConsoleColor.Red);
+            Console.ForegroundColor = cor;
+            Console.WriteLine("╔" + "".PadRight(espaco, '═') + "╗");
+            Console.WriteLine("║" + CentralizarTexto(espaco, texto) + "║");
+            Console.WriteLine("╚" + "".PadRight(espaco, '═') + "╝");
+            PulaLinha();
+            Console.ResetColor();
         }
 
-        public EntidadeBase ObterId(RepositorioBase tipoRepositorio, string mensagem)
+        protected string CentralizarTexto(int espaco, string texto)
         {
-            EntidadeBase registro;
+            int calculoLeft = (espaco + texto.Length) / 2;
 
-            if (ValidaListaVazia(tipoRepositorio.ObterListaRegistros()))
-            {
-                while (true)
-                {
-                    int idEscolhido = (int)ValidaNumero(mensagem);
+            string textoCentralizado = $"{texto.PadLeft(calculoLeft, ' ').PadRight(espaco, ' ')}";
 
-                    registro = tipoRepositorio.SelecionarId(idEscolhido);
-
-                    if (registro == null)
-                        AvisoIdInexistente();
-                    else
-                        return registro;
-                }
-            }
-            return null;
+            return textoCentralizado;
         }
 
         protected void MensagemColor(string mensagem, ConsoleColor cor)
@@ -137,66 +312,11 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             else { Console.ResetColor(); zebrado = true; }
         }
 
+        protected bool zebrado = true;
+
         protected void PulaLinha()
         {
             Console.WriteLine();
-        }
-
-        protected bool zebrado = true;
-
-        public virtual void AdicionarRegistro(RepositorioBase tipoRepositorio)
-        {
-            VisualizarRegistro();
-
-            RepositorioBase repositorio = tipoRepositorio;
-
-            EntidadeBase registro = ObterCadastro();
-
-            repositorio.Adicionar(registro);
-
-            VisualizarRegistro();
-
-            MensagemColor($"\nCadastro adicionado com sucesso!", ConsoleColor.Green);
-
-            Console.ReadLine();
-        }
-
-        public virtual void EditarRegistro(RepositorioBase tipoRepositorio)
-        {
-            VisualizarRegistro();
-
-            if (ValidaListaVazia(tipoRepositorio.ObterListaRegistros()))
-            {
-                EntidadeBase registroAntigo = ObterId(tipoRepositorio, "Digite o ID do Item que deseja editar: ");
-
-                EntidadeBase registroAtualizado = ObterCadastro();
-
-                tipoRepositorio.Editar(registroAntigo, registroAtualizado);
-
-                VisualizarRegistro();
-
-                MensagemColor("\nItem editado com sucesso!", ConsoleColor.Green);
-            }
-
-            Console.ReadLine();
-        }
-
-        public virtual void ExcluirRegistro(RepositorioBase tipoRepositorio)
-        {
-            VisualizarRegistro();
-
-            if (ValidaListaVazia(tipoRepositorio.ObterListaRegistros()))
-            {
-                EntidadeBase registroEscolhido = ObterId(tipoRepositorio, "Digite o ID do Item que deseja excluir: ");
-
-                tipoRepositorio.Excluir(registroEscolhido);
-
-                VisualizarRegistro();
-
-                MensagemColor("\nItem excluído com sucesso!", ConsoleColor.Green);
-            }
-
-            Console.ReadLine();
         }
     }
 }

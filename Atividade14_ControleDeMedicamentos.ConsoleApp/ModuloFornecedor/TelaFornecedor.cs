@@ -21,11 +21,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor
         {
             Console.Clear();
 
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("╔" + "".PadRight(80, '═') + "╗");
-            Console.WriteLine("║                                   Fornecedor                                   ║");
-            Console.WriteLine("╚" + "".PadRight(80, '═') + "╝");
-            PulaLinha();
+            MostrarCabecalho(80, "Fornecedor", ConsoleColor.DarkYellow);
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             string espacamento = "{0, -5} │ {1, -30} │ {2, -20} │ {3, -18}";
             Console.WriteLine(espacamento, "ID", "Nome", "CNPJ", "Telefone");
@@ -45,7 +41,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor
             PulaLinha();
         }
 
-        public override EntidadeBase ObterCadastro()
+        protected override EntidadeBase ObterCadastro()
         {
             Fornecedor fornecedor = new()
             {
@@ -58,20 +54,20 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor
 
         private string ObterNome()
         {
-            Console.Write("Escreva o Nome: ");
-            string nome = Console.ReadLine();
+            Fornecedor fornecedor = new();
+            string nome = fornecedor.ValidaCampoVazio("Escreva o Nome: ");
             return nome;
         }
 
-        private ulong ObterCNPJ()
+        private string ObterCNPJ()
         {
-            ulong cnpj = ValidaNumero("Escreva o CNPJ: ");
+            string cnpj = ValidaCNPJ("Escreva o CNPJ: ");
             return cnpj;
         }
 
-        private ulong ObterTelefone()
+        private string ObterTelefone()
         {
-            ulong telefone = ValidaNumero("Escreva o Telefone: ");
+            string telefone = ValidaTelefone("Escreva o Telefone: ");
             return telefone;
         }
     }

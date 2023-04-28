@@ -46,11 +46,6 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
             }
         }
 
-        public ArrayList ObterListaRegistros()
-        {
-            return listaRegistros;
-        }
-
         public EntidadeBase SelecionarId(int idEscolhido)
         {
             foreach (EntidadeBase registro in listaRegistros)
@@ -58,6 +53,27 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
                     return registro;
 
             return null;
+        }
+
+        public ArrayList ObterListaRegistros()
+        {
+            return listaRegistros;
+        }
+
+        public void PreCadastrarTestes(EntidadeBase entidade)
+        {
+            Type tipoEntidade = entidade.GetType();
+
+            foreach (var atributo in tipoEntidade.GetFields())
+            {
+                if (atributo.Name != "id" && atributo.FieldType == typeof(string))
+                    atributo.SetValue(entidade, "TESTE");
+
+                else if (atributo.Name != "id")
+                    atributo.SetValue(entidade, 22);
+            }
+
+            Adicionar(entidade);
         }
     }
 }

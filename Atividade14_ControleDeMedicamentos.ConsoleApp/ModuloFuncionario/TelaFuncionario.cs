@@ -21,11 +21,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFuncionario
         {
             Console.Clear();
 
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("╔" + "".PadRight(80, '═') + "╗");
-            Console.WriteLine("║                                  Funcionários                                  ║");
-            Console.WriteLine("╚" + "".PadRight(80, '═') + "╝");
-            PulaLinha();
+            MostrarCabecalho(80, "Funcionário", ConsoleColor.DarkGreen);
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             string espacamento = "{0, -5} │ {1, -30} │ {2, -20} │ {3, -18}";
             Console.WriteLine(espacamento, "ID", "Nome", "CPF", "Telefone");
@@ -45,7 +41,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFuncionario
             PulaLinha();
         }
 
-        public override EntidadeBase ObterCadastro()
+        protected override EntidadeBase ObterCadastro()
         {
             Funcionario funcionario = new()
             {
@@ -58,20 +54,20 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFuncionario
 
         private string ObterNome()
         {
-            Console.Write("Escreva o Nome: ");
-            string nome = Console.ReadLine();
+            Funcionario funcionario = new();
+            string nome = funcionario.ValidaCampoVazio("Escreva o Nome: ");
             return nome;
         }
 
-        private ulong ObterCPF()
+        private string ObterCPF()
         {
-            ulong cpf = ValidaNumero("Escreva o CPF: ");
+            string cpf = ValidaCPF("Escreva o CPF: ");
             return cpf;
         }
 
-        private ulong ObterTelefone()
+        private string ObterTelefone()
         {
-            ulong telefone = ValidaNumero("Escreva o Telefone: ");
+            string telefone = ValidaTelefone("Escreva o Telefone: ");
             return telefone;
         }
     }

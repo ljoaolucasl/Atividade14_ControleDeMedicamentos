@@ -10,7 +10,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor
     public class Fornecedor : EntidadeBase
     {
         public string nome;
-        public ulong cnpj;
-        public ulong telefone;
+        public string cnpj;
+        public string telefone;
     }
 }

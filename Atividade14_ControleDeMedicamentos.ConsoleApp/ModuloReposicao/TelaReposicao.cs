@@ -12,9 +12,9 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
 {
     public class TelaReposicao : TelaBase
     {
-        public RepositorioReposicao repositorioReposicao;
+        private RepositorioReposicao repositorioReposicao;
 
-        public RepositorioMedicamento repositorioMedicamento;
+        private RepositorioMedicamento repositorioMedicamento;
 
         public TelaReposicao(RepositorioReposicao repositorioReposicao, RepositorioMedicamento repositorioMedicamento)
         {
@@ -47,15 +47,11 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
 
         public override void VisualizarRegistro()
         {
-            ConsoleColor cor;
-
             Console.Clear();
 
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.WriteLine("╔" + "".PadRight(138, '═') + "╗");
-            Console.WriteLine("║                                                               Medicamentos                                                               ║");
-            Console.WriteLine("╚" + "".PadRight(138, '═') + "╝");
-            PulaLinha();
+            ConsoleColor cor;
+
+            MostrarCabecalho(138, "Medicamentos", ConsoleColor.DarkMagenta);
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             string espacamento = "{0, -5} │ {1, -30} │ {2, -30} │ {3, -30} │ ";
             Console.Write(espacamento, "ID", "Nome", "Descrição", "Fornecedor");
@@ -83,7 +79,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
             PulaLinha();
         }
 
-        public override bool InicializarOpcaoEscolhida(RepositorioBase tipoRepositorio)
+        protected override bool InicializarOpcaoEscolhida(RepositorioBase tipoRepositorio)
         {
             string entrada = Console.ReadLine();
 
@@ -95,6 +91,11 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
                 default: break;
             }
             return true;
+        }
+
+        protected override EntidadeBase ObterCadastro()
+        {
+            throw new NotImplementedException();
         }
 
         private ConsoleColor VerificarDisponibilidadePorCor(Medicamento medicamento)
@@ -121,7 +122,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao
             {
                 Medicamento medicamento = (Medicamento)ObterId(repositorioMedicamento, "Digite o ID do Medicamento que deseja repor: ");
 
-                int quantidade = (int)ValidaNumero($"Escreva quanto de {medicamento.nome} deseja solicitar: ");
+                int quantidade = ValidaNumero($"Escreva quanto de {medicamento.nome} deseja solicitar: ");
 
                 repositorioReposicao.AdicionarQuantidadeMedicamento(medicamento, quantidade);
 

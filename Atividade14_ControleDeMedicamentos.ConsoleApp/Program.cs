@@ -42,7 +42,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp
             repositorioMedicamento.PreCadastrarMedicamentos();
             repositorioPaciente.PreCadastrarPacientes();
             repositorioFuncionario.PreCadastrarFuncionarios();
-            
+
             LogoInicio();
 
             while (continuar)

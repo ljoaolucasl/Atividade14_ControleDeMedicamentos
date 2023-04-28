@@ -12,15 +12,15 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
 {
     public class TelaRequisicao : TelaBase
     {
-        public RepositorioPaciente repositorioPaciente;
-        public RepositorioMedicamento repositorioMedicamento;
-        public RepositorioFuncionario repositorioFuncionario;
+        private RepositorioPaciente repositorioPaciente;
+        private RepositorioMedicamento repositorioMedicamento;
+        private RepositorioFuncionario repositorioFuncionario;
 
-        public TelaPaciente telaPaciente;
-        public TelaMedicamento telaMedicamento;
-        public TelaFuncionario telaFuncionario;
+        private TelaPaciente telaPaciente;
+        private TelaMedicamento telaMedicamento;
+        private TelaFuncionario telaFuncionario;
 
-        public RepositorioRequisicao repositorioRequisicao;
+        private RepositorioRequisicao repositorioRequisicao;
 
         public TelaRequisicao(RepositorioRequisicao repositorioRequisicao, RepositorioPaciente repositorioPaciente,
             RepositorioMedicamento repositorioMedicamento, RepositorioFuncionario repositorioFuncionario,
@@ -39,11 +39,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
         {
             Console.Clear();
 
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("╔" + "".PadRight(120, '═') + "╗");
-            Console.WriteLine("║                                                       Requisições                                                      ║");
-            Console.WriteLine("╚" + "".PadRight(120, '═') + "╝");
-            PulaLinha();
+            MostrarCabecalho(120, "Requisições", ConsoleColor.White);
             Console.ForegroundColor = ConsoleColor.White;
             string espacamento = "{0, -5} │ {1, -30} │ {2, -30} │ {3, -30} │ {4, -15}";
             Console.WriteLine(espacamento, "ID", "Paciente", "Medicamento", "Funcionário Responsável", "Data");
@@ -63,7 +59,7 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
             PulaLinha();
         }
 
-        public override EntidadeBase ObterCadastro()
+        protected override EntidadeBase ObterCadastro()
         {
             Requisicao requisicao = new()
             {
@@ -128,30 +124,6 @@ namespace Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao
         {
             DateTime data = ValidaData("Escreva a Data da Requisição: ");
             return data;
-        }
-
-        private DateTime ValidaData(string mensagem)
-        {
-            bool validaData;
-            string entrada;
-            DateTime dataAbertura;
-
-            do
-            {
-                Console.Write(mensagem);
-
-                entrada = Console.ReadLine();
-
-                validaData = DateTime.TryParse(entrada, out dataAbertura);
-
-                if (!validaData)
-                {
-                    MensagemColor("Atenção, escreva uma data válida\n", ConsoleColor.Red);
-                }
-
-            } while (!validaData);
-
-            return dataAbertura;
         }
     }
 }
