@@ -1,5 +1,4 @@
-﻿using Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado;
-using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor;
+﻿using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFornecedor;
 using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloFuncionario;
 using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento;
 using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloPaciente;

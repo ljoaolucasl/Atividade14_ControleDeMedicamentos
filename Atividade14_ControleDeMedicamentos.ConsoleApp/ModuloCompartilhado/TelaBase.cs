@@ -1,14 +1,5 @@
-﻿using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloMedicamento;
-using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloReposicao;
-using Atividade14_ControleDeMedicamentos.ConsoleApp.ModuloRequisicao;
-using Microsoft.Win32;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Atividade14_ControleDeMedicamentos.ConsoleApp.Compartilhado
 {
